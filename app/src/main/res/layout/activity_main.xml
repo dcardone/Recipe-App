@@ -1,19 +1,239 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:padding="16dp">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- Welcome Message -->
+        <TextView
+            android:id="@+id/tvWelcome"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome to the Recipe App!"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp" />
+
+        <!-- Dish Name Input -->
+        <TextView
+            android:id="@+id/tvDishName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dish Name:"
+            android:textSize="18sp"
+            android:paddingBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etDishName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter dish name"
+            android:inputType="textPersonName" />
+
+        <!-- Ingredients Section -->
+        <TextView
+            android:id="@+id/tvIngredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Add Ingredients:"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <!-- Dynamic Ingredient Fields -->
+        <LinearLayout
+            android:id="@+id/addIngredientLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/ingredientName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Name:"
+                android:textSize="18sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/tvIngredientName"
+                android:layout_width="340dp"
+                android:layout_height="wrap_content"
+                android:hint="Enter ingredient name"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ingredientsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/ingredientAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount:"
+                android:textSize="18sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/tvIngredientAmountTv"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:hint="value"
+                android:inputType="text" />
+            <TextView
+                android:id="@+id/unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unit:"
+                android:textSize="18sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/unitTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="e.g. ml, oz, etc."
+                android:inputType="text" />
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/btnAddIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Ingredient"
+            android:layout_gravity="center"
+            android:marginBottom="16dp" />
+
+        <TextView
+            android:id="@+id/ingredients"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingredients:"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <!-- Dietary Preferences -->
+        <TextView
+            android:id="@+id/tvDietaryPreferences"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dietary Preferences:"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <!-- Individual Dietary Preferences -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="5"
+            android:paddingTop="8dp">
+
+            <CheckBox
+                android:id="@+id/checkDairyFree"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Dairy Free" />
+
+            <CheckBox
+                android:id="@+id/checkNutFree"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nut Free" />
+
+            <CheckBox
+                android:id="@+id/checkVegan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Vegan" />
+
+            <CheckBox
+                android:id="@+id/checkVegetarian"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Vegetarian" />
+
+            <CheckBox
+                android:id="@+id/checkGlutenFree"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Gluten Free" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/prepTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prep Time:"
+                android:textSize="18sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/prepTimeTv"
+                android:layout_width="340dp"
+                android:layout_height="wrap_content"
+                android:hint="Enter only time to prepare"
+                android:inputType="textPersonName" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/totalTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/totalTimeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total time:"
+                android:textSize="18sp"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <EditText
+                android:id="@+id/tvTotalTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter total time to make"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/btnSubmit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit Recipe"
+            android:layout_marginTop="16dp" />
+
+    </LinearLayout>
+</ScrollView>
