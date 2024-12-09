@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Dish Name -->
+        <TextView
+            android:id="@+id/tvDishNameDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dish Name: Dish Name Placeholder"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:paddingBottom="16dp" />
+
+        <!-- Ingredients Section -->
+        <TextView
+            android:id="@+id/tvIngredientsDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingredients:"
+            android:textSize="18sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Example Ingredient List -->
+        <TextView
+            android:id="@+id/tvIngredient1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="1. Ingredient: Example Ingredient (Amount: 2 tbsp)"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Dietary Preferences -->
+        <TextView
+            android:id="@+id/tvDietaryPreferencesDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dietary Preferences:"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <!-- Display Dietary Preferences -->
+        <TextView
+            android:id="@+id/tvDairyFreeDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Dairy Free: Yes"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvNutFreeDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nut Free: No"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvVeganDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vegan: Yes"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvVegetarianDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Vegetarian: Yes"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvGlutenFreeDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gluten Free: Yes"
+            android:textSize="16sp"
+            android:paddingBottom="8dp" />
+
+        <!-- Time Information -->
+        <TextView
+            android:id="@+id/tvTimeDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Preparation Time: 30 minutes"
+            android:textSize="16sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvTotalTimeDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Time: 1 hour"
+            android:textSize="16sp"
+            android:paddingBottom="16dp" />
+
+        <!-- Email Button -->
+        <Button
+            android:id="@+id/btnEmailRecipe"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email Recipe"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center" />
+
+    </LinearLayout>
+</ScrollView>
