@@ -24,6 +24,10 @@ class Recipe {
         this.instructions = instructions
     }
 
+    constructor() {
+
+    }
+
     fun setName(name : String) {
         if (!name.isNullOrBlank())
             this.name = name
@@ -125,5 +129,13 @@ class Recipe {
 
     fun getDF() : Boolean {
         return dairyFree
+    }
+
+    fun getIngredients() : ArrayList<Ingredient> {
+        return ingredients
+    }
+
+    fun getInstructions() : ArrayList<String> {
+        return instructions
     }
 }

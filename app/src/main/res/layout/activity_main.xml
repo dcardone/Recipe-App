@@ -92,7 +92,7 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:hint="value"
-                android:inputType="text" />
+                android:inputType="numberDecimal"/>
             <TextView
                 android:id="@+id/unit"
                 android:layout_width="wrap_content"
@@ -203,8 +203,8 @@
                 android:id="@+id/prepTimeTv"
                 android:layout_width="340dp"
                 android:layout_height="wrap_content"
-                android:hint="Enter only time to prepare"
-                android:inputType="textPersonName" />
+                android:hint="Enter only time to prepare in min"
+                android:inputType="numberDecimal"/>
         </LinearLayout>
 
         <LinearLayout
@@ -225,8 +225,8 @@
                 android:id="@+id/tvTotalTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter total time to make"
-                android:inputType="text" />
+                android:hint="Enter total time to make in min"
+                android:inputType="numberDecimal" />
         </LinearLayout>
 
         <!-- Submit Button -->
