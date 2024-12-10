@@ -7,14 +7,13 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.Toast
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
-import com.google.firebase.FirebaseApp
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
@@ -22,6 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var adView : AdView
 
     private lateinit var dishNameET : EditText
+
+    private lateinit var ingredientsLayout : LinearLayout
 
     private lateinit var ingredientET : EditText
     private lateinit var amountET : EditText
@@ -36,12 +37,18 @@ class MainActivity : AppCompatActivity() {
     private lateinit var prepTimeET : EditText
     private lateinit var totalTimeET : EditText
 
+    private lateinit var instructionsET : EditText
+
     private lateinit var addIngredientBtn: Button
     private lateinit var submitRecipeBtn: Button
 
     private lateinit var currRecipe: Recipe
 
     private lateinit var recipeManager: RecipeManager
+
+    private lateinit var makeRecipeBtn : Button
+    private lateinit var viewMyRecipesBtn : Button
+    private lateinit var searchRecipesBtn : Button
 
 
 
@@ -79,19 +86,29 @@ class MainActivity : AppCompatActivity() {
         prepTimeET = findViewById(R.id.prepTimeTv)
         totalTimeET = findViewById(R.id.tvTotalTime)
 
+        instructionsET = findViewById(R.id.etInstructions)
+
         addIngredientBtn = findViewById(R.id.btnAddIngredient)
         submitRecipeBtn = findViewById(R.id.btnSubmit)
+
+        ingredientsLayout = findViewById(R.id.ingredientList)
+
+        makeRecipeBtn = findViewById(R.id.btnMakeRecipe)
+        viewMyRecipesBtn = findViewById(R.id.btnViewMyRecipes)
+        searchRecipesBtn = findViewById(R.id.btnSearchRecipes)
+
 
         /** SET UP EVENT HANDLING **/
         addIngredientBtn.setOnClickListener{ addIngredient() }
         submitRecipeBtn.setOnClickListener{ submitRecipe() }
+        makeRecipeBtn.setOnClickListener{ makeRecipeViewChange() }
+        viewMyRecipesBtn.setOnClickListener{ viewMyRecipesViewChange() }
+        searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
+
 
 
         /** CREATE EMPTY RECIPE TO BE FILLED **/
         currRecipe = Recipe()
-
-
-
     }
 
     fun addIngredient() {
@@ -114,8 +131,13 @@ class MainActivity : AppCompatActivity() {
             var newIngredient = Ingredient(name, amountVal, unit)
             currRecipe.addIngredients(newIngredient)
 
-            var toast : Toast = Toast.makeText( this, newIngredient.getName() + " has been added to ingredients", Toast.LENGTH_SHORT )
-            toast.show()
+            val textView = TextView(this).apply {
+                text = name
+                textSize = 16f
+                setPadding(16, 16, 16, 16)
+            }
+
+            ingredientsLayout.addView(textView)
 
             ingredientET.setText("")
             amountET.setText("")
@@ -187,12 +209,7 @@ class MainActivity : AppCompatActivity() {
             veganBox.isChecked = false
             vegetarianBox.isChecked = false
             glutenFreeBox.isChecked = false
-
-
-
         }
-
-
     }
 
 
@@ -223,5 +240,118 @@ class MainActivity : AppCompatActivity() {
             Log.w( "MainActivity", "error: " + error.toString() )
         }
 
+    }
+
+    fun makeRecipeViewChange() {
+        setContentView(R.layout.activity_main)
+        adView = AdView(this)
+        var adSize : AdSize = AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT)
+        adView.setAdSize(adSize)
+        var adUnitId : String = "ca-app-pub-3940256099942544/6300978111"
+        adView.adUnitId = adUnitId
+
+        var builder : AdRequest.Builder = AdRequest.Builder()
+        builder.addKeyword("cooking").addKeyword("food").addKeyword("recipe").addKeyword("baking").addKeyword("kitchen")
+        var request : AdRequest = builder.build()
+
+        var adLayout : LinearLayout = findViewById(R.id.ad_view)
+        adLayout.addView(adView)
+        adView.loadAd(request)
+
+        /** VIEW INSTANTIATION **/
+        dishNameET = findViewById(R.id.etDishName)
+        ingredientET = findViewById(R.id.tvIngredientName)
+        amountET = findViewById(R.id.tvIngredientAmountTv)
+        unitET = findViewById(R.id.unitTv)
+
+        dairyFreeBox = findViewById(R.id.checkDairyFree)
+        nutFreeBox = findViewById(R.id.checkNutFree)
+        veganBox = findViewById(R.id.checkVegan)
+        vegetarianBox = findViewById(R.id.checkVegetarian)
+        glutenFreeBox = findViewById(R.id.checkGlutenFree)
+
+        prepTimeET = findViewById(R.id.prepTimeTv)
+        totalTimeET = findViewById(R.id.tvTotalTime)
+
+        instructionsET = findViewById(R.id.etInstructions)
+
+        addIngredientBtn = findViewById(R.id.btnAddIngredient)
+        submitRecipeBtn = findViewById(R.id.btnSubmit)
+
+        ingredientsLayout = findViewById(R.id.ingredientList)
+
+        makeRecipeBtn = findViewById(R.id.btnMakeRecipe)
+        viewMyRecipesBtn = findViewById(R.id.btnViewMyRecipes)
+        searchRecipesBtn = findViewById(R.id.btnSearchRecipes)
+
+
+        /** SET UP EVENT HANDLING **/
+        addIngredientBtn.setOnClickListener{ addIngredient() }
+        submitRecipeBtn.setOnClickListener{ submitRecipe() }
+        makeRecipeBtn.setOnClickListener{ makeRecipeViewChange() }
+        viewMyRecipesBtn.setOnClickListener{ viewMyRecipesViewChange() }
+        searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
+
+
+
+        /** CREATE EMPTY RECIPE TO BE FILLED **/
+        currRecipe = Recipe()
+    }
+
+    fun viewMyRecipesViewChange() {
+        setContentView(R.layout.view_my_recipes)
+
+        adView = AdView(this)
+        var adSize : AdSize = AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT)
+        adView.setAdSize(adSize)
+        var adUnitId : String = "ca-app-pub-3940256099942544/6300978111"
+        adView.adUnitId = adUnitId
+
+        var builder : AdRequest.Builder = AdRequest.Builder()
+        builder.addKeyword("cooking").addKeyword("food").addKeyword("recipe").addKeyword("baking").addKeyword("kitchen")
+        var request : AdRequest = builder.build()
+
+        var adLayout : LinearLayout = findViewById(R.id.ad_view)
+        adLayout.addView(adView)
+        adView.loadAd(request)
+
+        makeRecipeBtn = findViewById(R.id.btnMakeRecipe)
+        viewMyRecipesBtn = findViewById(R.id.btnViewMyRecipes)
+        searchRecipesBtn = findViewById(R.id.btnSearchRecipes)
+
+
+        /** SET UP EVENT HANDLING **/
+        makeRecipeBtn.setOnClickListener{ makeRecipeViewChange() }
+        viewMyRecipesBtn.setOnClickListener{ viewMyRecipesViewChange() }
+        searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
+    }
+
+    fun searchRecipesViewChange() {
+
+        setContentView(R.layout.search_recipes)
+
+        adView = AdView(this)
+        var adSize : AdSize = AdSize(AdSize.FULL_WIDTH, AdSize.AUTO_HEIGHT)
+        adView.setAdSize(adSize)
+        var adUnitId : String = "ca-app-pub-3940256099942544/6300978111"
+        adView.adUnitId = adUnitId
+
+        var builder : AdRequest.Builder = AdRequest.Builder()
+        builder.addKeyword("cooking").addKeyword("food").addKeyword("recipe").addKeyword("baking").addKeyword("kitchen")
+        var request : AdRequest = builder.build()
+
+        var adLayout : LinearLayout = findViewById(R.id.ad_view)
+        adLayout.addView(adView)
+        adView.loadAd(request)
+
+        makeRecipeBtn = findViewById(R.id.btnMakeRecipe)
+        viewMyRecipesBtn = findViewById(R.id.btnViewMyRecipes)
+        searchRecipesBtn = findViewById(R.id.btnSearchRecipes)
+
+
+        /** SET UP EVENT HANDLING **/
+        makeRecipeBtn.setOnClickListener{ makeRecipeViewChange() }
+        viewMyRecipesBtn.setOnClickListener{ viewMyRecipesViewChange() }
+        searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
     }
 }
