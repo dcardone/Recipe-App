@@ -4,6 +4,7 @@ import android.util.Log
 import java.sql.Time
 
 class Recipe {
+    private var recipeID : String = ""
     private var name : String = ""
     private var prepTime : Int = 0
     private var totalTime : Int = 0
@@ -26,6 +27,10 @@ class Recipe {
 
     constructor() {
 
+    }
+
+    fun setID(id : String) {
+        recipeID = id
     }
 
     fun setName(name : String) {
@@ -52,6 +57,7 @@ class Recipe {
                 return this
             }
         }
+        ingredients.add(newIngredient)
 
         return this
     }
@@ -100,7 +106,7 @@ class Recipe {
     }
 
     fun makeVegetarian() {
-        vegetarian = false
+        vegetarian = true
     }
 
     fun makeNF() {

@@ -1,6 +1,7 @@
 package com.example.recipeapp
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -10,6 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
 import com.google.android.gms.ads.AdView
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adView : AdView
@@ -35,6 +42,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var currRecipe: Recipe
 
     private lateinit var recipeManager: RecipeManager
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,12 +113,22 @@ class MainActivity : AppCompatActivity() {
             var amountVal : Float = amount.toFloat()
             var newIngredient = Ingredient(name, amountVal, unit)
             currRecipe.addIngredients(newIngredient)
+
+            var toast : Toast = Toast.makeText( this, newIngredient.getName() + " has been added to ingredients", Toast.LENGTH_SHORT )
+            toast.show()
+
+            ingredientET.setText("")
+            amountET.setText("")
+            unitET.setText("")
+            Log.w("MainActivity", currRecipe.getIngredients().toString())
+
         }
     }
 
     fun submitRecipe() {
         var prepTime : String = prepTimeET.text.toString()
         var totalTime : String = totalTimeET.text.toString()
+        currRecipe.addInstruction("Cook it")
 
         if (currRecipe.getIngredients().size <= 0) {
             var toast : Toast = Toast.makeText( this, "A recipe must have at least one ingredient", Toast.LENGTH_SHORT )
@@ -139,17 +157,41 @@ class MainActivity : AppCompatActivity() {
                 currRecipe.makeVegetarian()
             if(glutenFreeBox.isChecked)
                 currRecipe.makeGF()
+
+            var prepTimeVal : Int = prepTime.toInt()
+            var totalTimeVal : Int = totalTime.toInt()
+
+            currRecipe.setPrepTime(prepTimeVal)
+            currRecipe.setTotalTime(totalTimeVal)
+
+            /**         ADD RECIPE TO FAVORITES                  **
+             **         PUSH RECIPE TO FIREBASE                  **
+             ** UPDATE SHARED PREFERENCES (user created recipes) **/
+
+
+
+            var firebase : FirebaseDatabase = FirebaseDatabase.getInstance()
+            val recipesRef = firebase.getReference("recipes")
+
+            val recipeId = recipesRef.push().key // Generate unique key
+            if (recipeId != null) {
+                currRecipe.setID(recipeId)
+                recipesRef.child(recipeId).setValue(currRecipe)
+            }
+
+            dishNameET.setText("")
+            prepTimeET.setText("")
+            totalTimeET.setText("")
+            dairyFreeBox.isChecked = false
+            nutFreeBox.isChecked = false
+            veganBox.isChecked = false
+            vegetarianBox.isChecked = false
+            glutenFreeBox.isChecked = false
+
+
+
         }
 
-        var prepTimeVal : Int = prepTime.toInt()
-        var totalTimeVal : Int = totalTime.toInt()
-
-        currRecipe.setPrepTime(prepTimeVal)
-        currRecipe.setTotalTime(totalTimeVal)
-
-        /**         ADD RECIPE TO FAVORITES                  **
-         **         PUSH RECIPE TO FIREBASE                  **
-         ** UPDATE SHARED PREFERENCES (user created recipes) **/
 
     }
 
@@ -167,5 +209,19 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         adView.resume()
+    }
+
+    inner class DataListener : ValueEventListener {
+        override fun onDataChange(snapshot: DataSnapshot) {
+            Log.w( "MainActivity", "Inside onDataChange" )
+            if( snapshot.value != null ) {
+                Log.w( "MainActivity", "value read is: " + snapshot.value.toString( ) )
+            }
+        }
+
+        override fun onCancelled(error: DatabaseError) {
+            Log.w( "MainActivity", "error: " + error.toString() )
+        }
+
     }
 }
