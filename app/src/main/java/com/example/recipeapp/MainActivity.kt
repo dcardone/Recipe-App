@@ -16,11 +16,8 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+import org.json.JSONArray
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adView : AdView
@@ -193,6 +190,9 @@ class MainActivity : AppCompatActivity() {
 
             currRecipe.setName(dishNameET.text.toString())
 
+            // Save to SharedPreferences
+            saveRecipeToSharedPreferences(currRecipe)
+
 
             /**         ADD RECIPE TO FAVORITES                  **
              **         PUSH RECIPE TO FIREBASE                  **
@@ -214,15 +214,39 @@ class MainActivity : AppCompatActivity() {
                     }
             }
 
-            dishNameET.setText("")
-            prepTimeET.setText("")
-            totalTimeET.setText("")
-            dairyFreeBox.isChecked = false
-            nutFreeBox.isChecked = false
-            veganBox.isChecked = false
-            vegetarianBox.isChecked = false
-            glutenFreeBox.isChecked = false
+            // Clear inputs
+            clearRecipeForm()
         }
+    }
+
+    private fun clearRecipeForm() {
+        dishNameET.setText("")
+        prepTimeET.setText("")
+        totalTimeET.setText("")
+        instructionsET.setText("")
+        dairyFreeBox.isChecked = false
+        nutFreeBox.isChecked = false
+        veganBox.isChecked = false
+        vegetarianBox.isChecked = false
+        glutenFreeBox.isChecked = false
+        ingredientsLayout.removeAllViews()
+        currRecipe = Recipe()
+    }
+
+    private fun saveRecipeToSharedPreferences(recipe: Recipe) {
+        val sharedPreferences = getSharedPreferences("recipes", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+
+        val existingRecipes = sharedPreferences.getString("recipes_list", "[]")
+        val recipesArray = JSONArray(existingRecipes)
+
+        recipesArray.put(recipe.toJSON())
+
+        editor.putString("recipes_list", recipesArray.toString())
+        editor.apply()
+
+        var toast : Toast = Toast.makeText( this, "Recipe saved successfully!", Toast.LENGTH_SHORT )
+        toast.show()
     }
 
 
@@ -328,6 +352,21 @@ class MainActivity : AppCompatActivity() {
         adLayout.addView(adView)
         adView.loadAd(request)
 
+        val recipeListContainer = findViewById<LinearLayout>(R.id.recipeListContainer)
+
+        // Load recipes and display
+        val recipes = loadRecipesFromSharedPreferences()
+        recipeListContainer.removeAllViews()
+
+        for (recipe in recipes) {
+            val textView = TextView(this).apply {
+                text = recipe.toJSON().toString(4) // Pretty-print JSON
+                textSize = 16f
+                setPadding(16, 16, 16, 16)
+            }
+            recipeListContainer.addView(textView)
+        }
+
         makeRecipeBtn = findViewById(R.id.btnMakeRecipe)
         viewMyRecipesBtn = findViewById(R.id.btnViewMyRecipes)
         searchRecipesBtn = findViewById(R.id.btnSearchRecipes)
@@ -338,6 +377,56 @@ class MainActivity : AppCompatActivity() {
         viewMyRecipesBtn.setOnClickListener{ viewMyRecipesViewChange() }
         searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
     }
+
+    private fun loadRecipesFromSharedPreferences(): ArrayList<Recipe> {
+        val sharedPreferences = getSharedPreferences("recipes", MODE_PRIVATE)
+        val recipesList = ArrayList<Recipe>()
+
+        val recipesString = sharedPreferences.getString("recipes_list", "[]")
+        val recipesArray = JSONArray(recipesString)
+
+        for (i in 0 until recipesArray.length()) {
+            val recipeObject = recipesArray.getJSONObject(i)
+            val recipe = Recipe()
+            recipe.setID(recipeObject.getString("recipeID"))
+            recipe.setName(recipeObject.getString("name"))
+            recipe.setPrepTime(recipeObject.getInt("prepTime"))
+            recipe.setTotalTime(recipeObject.getInt("totalTime"))
+            recipe.setInstruction(recipeObject.getString("instructions"))
+
+            if (recipeObject.getBoolean("dairyFree")) {
+                recipe.makeDF()
+            }
+            if (recipeObject.getBoolean("nutFree")) {
+                recipe.makeNF()
+            }
+            if (recipeObject.getBoolean("vegan")) {
+                recipe.makeVegan()
+            }
+            if (recipeObject.getBoolean("vegetarian")) {
+                recipe.makeVegetarian()
+            }
+            if (recipeObject.getBoolean("glutenFree")) {
+                recipe.makeGF()
+            }
+
+            val ingredientsArray = recipeObject.getJSONArray("ingredients")
+            for (j in 0 until ingredientsArray.length()) {
+                val ingredientObject = ingredientsArray.getJSONObject(j)
+                val ingredient = Ingredient(
+                    ingredientObject.getString("name"),
+                    ingredientObject.getDouble("amt").toFloat(),
+                    ingredientObject.getString("unit")
+                )
+                recipe.addIngredients(ingredient)
+            }
+
+            recipesList.add(recipe)
+        }
+
+        return recipesList
+    }
+
 
     fun searchRecipesViewChange() {
 

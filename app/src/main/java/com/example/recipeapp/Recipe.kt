@@ -174,4 +174,12 @@ class Recipe {
         return json
     }
 
+    fun getTotalTime(): Int {
+        return totalTime
+    }
+
+    fun getName() : String {
+        return name
+    }
+
 }
