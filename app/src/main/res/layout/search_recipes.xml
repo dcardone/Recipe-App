@@ -17,93 +17,105 @@
         android:layout_below="@+id/ad_view"
         android:layout_above="@+id/bottomMenu">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Title -->
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Recipes"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:paddingBottom="16dp" />
-
-        <!-- Search Bar -->
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Search recipes"
-            android:inputType="text"
-            android:padding="8dp"
-            android:background="@android:drawable/edit_text"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Recipe List Container -->
         <LinearLayout
-            android:id="@+id/recipeListContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
 
-    </LinearLayout>
-</ScrollView>
+            <!-- Title -->
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Recipes"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="16dp" />
 
-<LinearLayout
-android:id="@+id/bottomMenu"
-android:layout_width="match_parent"
-android:layout_height="wrap_content"
-android:layout_alignParentBottom="true"
-android:orientation="horizontal"
-android:background="#F5F5F5"
-android:padding="8dp"
-android:gravity="center">
+            <!-- Search Bar -->
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search recipes"
+                android:inputType="text"
+                android:padding="8dp"
+                android:background="@android:drawable/edit_text"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
 
-<LinearLayout
+            <!-- Recipe List Container -->
+            <LinearLayout
+                android:id="@+id/recipeListContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+            <!-- Search Button -->
+            <Button
+                android:id="@+id/btnSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Search"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <LinearLayout
+    android:id="@+id/bottomMenu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
     android:orientation="horizontal"
-    android:gravity="center"
-    android:layout_marginTop="16dp"
-    android:layout_marginBottom="16dp"
-    android:padding="8dp">
+    android:background="#F5F5F5"
+    android:padding="8dp"
+    android:gravity="center">
 
-    <!-- Make Recipe Button -->
-    <Button
-        android:id="@+id/btnMakeRecipe"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Make Recipe"
-        android:layout_marginEnd="8dp"
-        android:textColor="@color/white" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:padding="8dp">
 
-    <!-- View My Recipes Button -->
-    <Button
-        android:id="@+id/btnViewMyRecipes"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="View My Recipes"
-        android:layout_marginEnd="8dp"
-        android:textColor="@color/white" />
+            <!-- Make Recipe Button -->
+            <Button
+                android:id="@+id/btnMakeRecipe"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Make Recipe"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/white" />
 
-    <!-- Search Recipes Button -->
-    <Button
-        android:id="@+id/btnSearchRecipes"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Search Recipes"
-        android:textColor="@color/white" />
+            <!-- View My Recipes Button -->
+            <Button
+                android:id="@+id/btnViewMyRecipes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="View My Recipes"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/white" />
 
-</LinearLayout>
+            <!-- Search Recipes Button -->
+            <Button
+                android:id="@+id/btnSearchRecipes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Search Recipes"
+                android:textColor="@color/white" />
 
-</LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
