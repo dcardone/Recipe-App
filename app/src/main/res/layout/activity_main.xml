@@ -28,11 +28,12 @@
                 android:id="@+id/tvWelcome"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Welcome to the Recipe App!"
+                android:text="Welcome to Dishcovery!"
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:paddingBottom="16dp" />
+                android:paddingBottom="16dp"
+                android:layout_marginTop="10dp"/>
 
             <!-- Dish Name Input -->
             <TextView
@@ -41,14 +42,16 @@
                 android:layout_height="wrap_content"
                 android:text="Dish Name:"
                 android:textSize="18sp"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="10dp"/>
 
             <EditText
                 android:id="@+id/etDishName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter dish name"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:layout_marginLeft="10dp"/>
 
             <!-- Ingredients Section -->
             <TextView
@@ -58,7 +61,8 @@
                 android:text="Add Ingredients:"
                 android:textSize="18sp"
                 android:paddingTop="16dp"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="10dp"/>
 
             <!-- Dynamic Ingredient Fields -->
             <LinearLayout
@@ -75,7 +79,8 @@
                     android:text="Name:"
                     android:textSize="18sp"
                     android:paddingTop="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="8dp"
+                    android:layout_marginLeft="10dp"/>
 
                 <EditText
                     android:id="@+id/tvIngredientName"
@@ -97,7 +102,8 @@
                     android:text="Amount:"
                     android:textSize="18sp"
                     android:paddingTop="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="8dp"
+                    android:layout_marginLeft="10dp"/>
 
                 <EditText
                     android:id="@+id/tvIngredientAmountTv"
@@ -138,7 +144,8 @@
                 android:text="Ingredients:"
                 android:textSize="18sp"
                 android:paddingTop="16dp"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="10dp"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -155,7 +162,8 @@
                 android:text="Dietary Preferences:"
                 android:textSize="18sp"
                 android:paddingTop="16dp"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="10dp"/>
 
             <!-- Individual Dietary Preferences -->
             <LinearLayout
@@ -163,44 +171,66 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:weightSum="5"
-                android:paddingTop="8dp">
+                android:weightSum="3"
+                android:layout_margin="10dp">
 
                 <CheckBox
                     android:id="@+id/checkDairyFree"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Dairy Free" />
+                    android:text="Dairy Free"
+                    android:layout_gravity="center"
+                    android:textSize="16sp"/>
 
                 <CheckBox
                     android:id="@+id/checkNutFree"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="Nut Free" />
-
-                <CheckBox
-                    android:id="@+id/checkVegan"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Vegan" />
-
-                <CheckBox
-                    android:id="@+id/checkVegetarian"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Vegetarian" />
+                    android:text="Nut Free"
+                    android:textSize="16sp"/>
 
                 <CheckBox
                     android:id="@+id/checkGlutenFree"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Gluten Free" />
+                    android:text="Gluten Free"
+                    android:textSize="16sp"
+                    android:layout_gravity="center"/>
+
             </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:weightSum="3"
+            android:layout_margin="10dp">
+            <CheckBox
+                android:id="@+id/checkVegetarian"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Vegetarian"
+                android:layout_gravity="center"
+                android:textSize="16sp"/>
+
+
+
+            <CheckBox
+                android:id="@+id/checkVegan"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Vegan"
+                android:layout_gravity="center"
+                android:textSize="16sp"/>
+        </LinearLayout>>
 
             <LinearLayout
                 android:id="@+id/time"
@@ -216,7 +246,8 @@
                     android:text="Prep Time:"
                     android:textSize="18sp"
                     android:paddingTop="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="8dp"
+                    android:layout_marginLeft="10dp"/>
 
                 <EditText
                     android:id="@+id/prepTimeTv"
@@ -238,7 +269,8 @@
                     android:text="Total time:"
                     android:textSize="18sp"
                     android:paddingTop="16dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="8dp"
+                    android:layout_marginLeft="10dp"/>
 
                 <EditText
                     android:id="@+id/tvTotalTime"
@@ -260,24 +292,27 @@
                 android:layout_height="wrap_content"
                 android:text="Instructions:"
                 android:textSize="18sp"
-                android:paddingBottom="8dp" />
+                android:paddingBottom="8dp"
+                android:layout_marginLeft="10dp"/>
 
             <EditText
                 android:id="@+id/etInstructions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enter instructions"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:layout_marginLeft="10dp"/>
 
             </LinearLayout>
 
             <!-- Submit Button -->
             <Button
                 android:id="@+id/btnSubmit"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Submit Recipe"
-                android:layout_marginTop="16dp" />
+                android:layout_marginTop="16dp"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 

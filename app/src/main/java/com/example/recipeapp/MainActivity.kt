@@ -378,6 +378,7 @@ class MainActivity : AppCompatActivity() {
                 text = recipe.getName()
                 textSize = 18f
                 layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+                setPadding(5, 5, 5, 5)
             }
             row.addView(nameTextView)
 
@@ -701,7 +702,7 @@ class MainActivity : AppCompatActivity() {
         for (recipe in recipes) {
             val row = LinearLayout(this).apply {
                 orientation = LinearLayout.HORIZONTAL
-                setPadding(16, 16, 16, 16)
+                setPadding(20, 20, 20, 20)
             }
 
             // Add Recipe Name

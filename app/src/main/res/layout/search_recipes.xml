@@ -31,7 +31,7 @@
                 android:textSize="24sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:paddingBottom="16dp" />
+                android:layout_margin="10dp"/>
 
             <!-- Search Bar -->
             <EditText
@@ -42,9 +42,7 @@
                 android:inputType="text"
                 android:padding="8dp"
                 android:background="@android:drawable/edit_text"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp" />
+                android:layout_margin="16dp"/>
 
             <!-- Recipe List Container -->
             <LinearLayout
@@ -56,9 +54,11 @@
             <!-- Search Button -->
             <Button
                 android:id="@+id/btnSearch"
-                android:layout_width="match_parent"
+                android:layout_width="200dp"
+                android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:text="Search"
+                android:textSize="20dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp" />
 
