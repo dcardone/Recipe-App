@@ -1,5 +1,6 @@
 package com.example.recipeapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Button
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.DatabaseReference
 import org.json.JSONArray
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adView : AdView
@@ -52,6 +54,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var viewMyRecipesBtn : Button
     private lateinit var searchRecipesBtn : Button
 
+    private var lastActiveView: String = ""
+    private val VIEW_MY_RECIPES = "view_my_recipes"
+    private val VIEW_SEARCH_RECIPES = "search_recipes"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -336,6 +341,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun viewMyRecipesViewChange() {
+        lastActiveView = VIEW_MY_RECIPES
         setContentView(R.layout.view_my_recipes)
 
         adView = AdView(this)
@@ -396,6 +402,7 @@ class MainActivity : AppCompatActivity() {
                 viewOneRecipe(recipe)
             }
 
+
             // Add row to container
             recipeListContainer.addView(row)
         }
@@ -447,7 +454,11 @@ class MainActivity : AppCompatActivity() {
 
         // Set back button click listener
         backButton.setOnClickListener {
-            viewMyRecipesViewChange() // Navigate back to the recipe list view
+            when (lastActiveView) {
+                VIEW_MY_RECIPES -> viewMyRecipesViewChange()
+                VIEW_SEARCH_RECIPES -> searchRecipesViewChange()
+                else -> makeRecipeViewChange()
+            }
         }
     }
 
@@ -503,7 +514,7 @@ class MainActivity : AppCompatActivity() {
 
 
     fun searchRecipesViewChange() {
-
+        lastActiveView = VIEW_SEARCH_RECIPES
         setContentView(R.layout.search_recipes)
 
         adView = AdView(this)
@@ -520,6 +531,22 @@ class MainActivity : AppCompatActivity() {
         adLayout.addView(adView)
         adView.loadAd(request)
 
+        // Initialize views
+        val searchButton = findViewById<Button>(R.id.btnSearch)
+        val searchEditText = findViewById<EditText>(R.id.etSearch)
+        val recipeListContainer = findViewById<LinearLayout>(R.id.recipeListContainer)
+
+        // Search button click listener
+        searchButton.setOnClickListener {
+            val query = searchEditText.text.toString().trim()
+
+            if (query.isNotEmpty()) {
+                searchRecipesInFirebase(query, recipeListContainer)
+            } else {
+                Toast.makeText(this, "Please enter a recipe name to search", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         makeRecipeBtn = findViewById(R.id.btnMakeRecipe)
         viewMyRecipesBtn = findViewById(R.id.btnViewMyRecipes)
         searchRecipesBtn = findViewById(R.id.btnSearchRecipes)
@@ -530,4 +557,112 @@ class MainActivity : AppCompatActivity() {
         viewMyRecipesBtn.setOnClickListener{ viewMyRecipesViewChange() }
         searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
     }
+
+    fun searchRecipesInFirebase(query: String, container: LinearLayout) {
+        // Clear previous results
+        container.removeAllViews()
+
+        val firebase = FirebaseDatabase.getInstance()
+        val recipesRef = firebase.getReference("recipes")
+
+        recipesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val matchedRecipes = mutableListOf<Recipe>()
+
+                for (recipeSnapshot in snapshot.children) {
+                    val recipeJson = recipeSnapshot.value.toString()
+                    val recipe = Recipe().apply {
+                        val jsonObject = JSONObject(recipeJson)
+                        setID(jsonObject.getString("recipeID"))
+                        setName(jsonObject.getString("name"))
+                        setPrepTime(jsonObject.getInt("prepTime"))
+                        setTotalTime(jsonObject.getInt("totalTime"))
+                        setInstruction(jsonObject.getString("instructions"))
+
+                        if (jsonObject.getBoolean("dairyFree")) makeDF()
+                        if (jsonObject.getBoolean("nutFree")) makeNF()
+                        if (jsonObject.getBoolean("vegan")) makeVegan()
+                        if (jsonObject.getBoolean("vegetarian")) makeVegetarian()
+                        if (jsonObject.getBoolean("glutenFree")) makeGF()
+
+                        val ingredientsArray = jsonObject.getJSONArray("ingredients")
+                        for (i in 0 until ingredientsArray.length()) {
+                            val ingredientObject = ingredientsArray.getJSONObject(i)
+                            addIngredients(
+                                Ingredient(
+                                    ingredientObject.getString("name"),
+                                    ingredientObject.getDouble("amt").toFloat(),
+                                    ingredientObject.getString("unit")
+                                )
+                            )
+                        }
+                    }
+
+                    // Check if name matches query (case insensitive)
+                    if (recipe.getName().contains(query, ignoreCase = true)) {
+                        matchedRecipes.add(recipe)
+                    }
+                }
+
+                if (matchedRecipes.isEmpty()) {
+                    Toast.makeText(this@MainActivity, "No recipes found for \"$query\"", Toast.LENGTH_SHORT).show()
+                } else {
+                    displaySearchResults(matchedRecipes, container)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseError", "Failed to fetch recipes: ${error.message}")
+                Toast.makeText(this@MainActivity, "Error fetching recipes. Please try again.", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    fun displaySearchResults(recipes: List<Recipe>, container: LinearLayout) {
+        for (recipe in recipes) {
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                setPadding(16, 16, 16, 16)
+            }
+
+            // Add Recipe Name
+            val nameTextView = TextView(this).apply {
+                text = recipe.getName()
+                textSize = 18f
+                layoutParams =
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(nameTextView)
+
+            // Add Total Time
+            val timeTextView = TextView(this).apply {
+                text = "Time: ${recipe.getTotalTime()} mins"
+                textSize = 16f
+                layoutParams =
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(timeTextView)
+
+            // Add Ingredients Count
+            val ingredientsTextView = TextView(this).apply {
+                text = recipe.getIngredients().joinToString(", ") {
+                    "${it.getName()} (${it.getAmt()} ${it.getUnit()})"
+                }
+                textSize = 16f
+                layoutParams =
+                    LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(ingredientsTextView)
+
+            // Set Click Listener for Row
+            row.setOnClickListener {
+                viewOneRecipe(recipe)
+            }
+
+
+            // Add row to container
+            container.addView(row)
+        }
+    }
+
 }
