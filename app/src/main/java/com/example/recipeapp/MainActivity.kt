@@ -383,7 +383,7 @@ class MainActivity : AppCompatActivity() {
 
             // Add Ingredients Count
             val ingredientsTextView = TextView(this).apply {
-                text = "Ingredients: " + recipe.getIngredients().joinToString(", ") {
+                text = recipe.getIngredients().joinToString(", ") {
                     "${it.getName()} (${it.getAmt()} ${it.getUnit()})"
                 }
                 textSize = 16f
@@ -427,7 +427,7 @@ class MainActivity : AppCompatActivity() {
         nameTextView.text = "Dish Name: ${recipe.getName()}"
         timeTextView.text = "Preparation Time: ${recipe.getPrepTime()} mins"
         totalTimeTextView.text = "Total Time: ${recipe.getTotalTime()} mins"
-        instructionsTextView.text = "Instructions: ${recipe.getInstructions()}"
+        instructionsTextView.text = "${recipe.getInstructions()}"
 
         // Display ingredients
         val ingredientsString = recipe.getIngredients().joinToString("\n") { ingredient ->
