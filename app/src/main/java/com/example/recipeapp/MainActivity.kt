@@ -359,12 +359,45 @@ class MainActivity : AppCompatActivity() {
         recipeListContainer.removeAllViews()
 
         for (recipe in recipes) {
-            val textView = TextView(this).apply {
-                text = recipe.toJSON().toString(4) // Pretty-print JSON
-                textSize = 16f
+            // Create a row layout for each recipe
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
                 setPadding(16, 16, 16, 16)
             }
-            recipeListContainer.addView(textView)
+
+            // Add Recipe Name
+            val nameTextView = TextView(this).apply {
+                text = recipe.getName()
+                textSize = 18f
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(nameTextView)
+
+            // Add Total Time
+            val timeTextView = TextView(this).apply {
+                text = "Time: ${recipe.getTotalTime()} mins"
+                textSize = 16f
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(timeTextView)
+
+            // Add Ingredients Count
+            val ingredientsTextView = TextView(this).apply {
+                text = "Ingredients: " + recipe.getIngredients().joinToString(", ") {
+                    "${it.getName()} (${it.getAmt()} ${it.getUnit()})"
+                }
+                textSize = 16f
+                layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            row.addView(ingredientsTextView)
+
+            // Set Click Listener for Row
+            row.setOnClickListener {
+                viewOneRecipe(recipe)
+            }
+
+            // Add row to container
+            recipeListContainer.addView(row)
         }
 
         makeRecipeBtn = findViewById(R.id.btnMakeRecipe)
@@ -377,6 +410,47 @@ class MainActivity : AppCompatActivity() {
         viewMyRecipesBtn.setOnClickListener{ viewMyRecipesViewChange() }
         searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
     }
+
+    fun viewOneRecipe(recipe: Recipe) {
+        setContentView(R.layout.view_one_recipe)
+
+        // Find views in view_one_recipe.xml
+        val backButton = findViewById<Button>(R.id.btnBack)
+        val nameTextView = findViewById<TextView>(R.id.tvDishNameDisplay)
+        val ingredientsTextView = findViewById<TextView>(R.id.tvIngredientsDisplay)
+        val instructionsTextView = findViewById<TextView>(R.id.tvInstructionsDisplay)
+        val timeTextView = findViewById<TextView>(R.id.tvTimeDisplay)
+        val totalTimeTextView = findViewById<TextView>(R.id.tvTotalTimeDisplay)
+        val dietaryPreferencesTextView = findViewById<TextView>(R.id.tvDietaryPreferencesDisplay)
+
+        // Populate data from the recipe
+        nameTextView.text = "Dish Name: ${recipe.getName()}"
+        timeTextView.text = "Preparation Time: ${recipe.getPrepTime()} mins"
+        totalTimeTextView.text = "Total Time: ${recipe.getTotalTime()} mins"
+        instructionsTextView.text = "Instructions: ${recipe.getInstructions()}"
+
+        // Display ingredients
+        val ingredientsString = recipe.getIngredients().joinToString("\n") { ingredient ->
+            "${ingredient.getName()} (${ingredient.getAmt()} ${ingredient.getUnit()})"
+        }
+        ingredientsTextView.text = "Ingredients:\n$ingredientsString"
+
+        // Display dietary preferences
+        val preferences = mutableListOf<String>()
+        if (recipe.getDF()) preferences.add("Dairy-Free")
+        if (recipe.getNF()) preferences.add("Nut-Free")
+        if (recipe.getVegan()) preferences.add("Vegan")
+        if (recipe.getVegetarian()) preferences.add("Vegetarian")
+        if (recipe.getGF()) preferences.add("Gluten-Free")
+
+        dietaryPreferencesTextView.text = "Dietary Preferences:\n${preferences.joinToString(", ")}"
+
+        // Set back button click listener
+        backButton.setOnClickListener {
+            viewMyRecipesViewChange() // Navigate back to the recipe list view
+        }
+    }
+
 
     private fun loadRecipesFromSharedPreferences(): ArrayList<Recipe> {
         val sharedPreferences = getSharedPreferences("recipes", MODE_PRIVATE)

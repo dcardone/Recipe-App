@@ -182,4 +182,8 @@ class Recipe {
         return name
     }
 
+    fun getPrepTime(): Int {
+        return prepTime
+    }
+
 }
