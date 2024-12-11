@@ -106,6 +106,24 @@
             android:textSize="16sp"
             android:paddingBottom="16dp" />
 
+        <!-- Instructions -->
+        <TextView
+            android:id="@+id/tvInstuctionsWord"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions:"
+            android:textSize="18sp"
+            android:paddingTop="16dp"
+            android:paddingBottom="8dp" />
+
+        <TextView
+            android:id="@+id/tvInstructionsDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Boil water for 30 mins to prep"
+            android:textSize="16sp"
+            android:paddingBottom="16dp" />
+
         <!-- Email Button -->
         <Button
             android:id="@+id/btnEmailRecipe"
@@ -113,6 +131,15 @@
             android:layout_height="wrap_content"
             android:text="Email Recipe"
             android:layout_marginTop="16dp"
+            android:layout_gravity="center" />
+
+        <!-- Back Button -->
+        <Button
+            android:id="@+id/btnBack"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:layout_marginBottom="16dp"
             android:layout_gravity="center" />
 
     </LinearLayout>
