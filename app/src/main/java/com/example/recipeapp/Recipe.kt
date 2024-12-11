@@ -2,6 +2,8 @@ package com.example.recipeapp
 
 import android.util.Log
 import java.sql.Time
+import org.json.JSONArray
+import org.json.JSONObject
 
 class Recipe {
     private var recipeID : String = ""
@@ -14,10 +16,10 @@ class Recipe {
     private var nutFree : Boolean = false
     private var dairyFree : Boolean = false
     private var ingredients : ArrayList<Ingredient> = ArrayList<Ingredient>()
-    private var instructions : ArrayList<String> = ArrayList<String>()
+    private var instructions : String = ""
     // some sort of review mechanism, star rating system
 
-    constructor(name : String, prepTime : Int, totalTime : Int, ingredient : ArrayList<Ingredient>, instructions : ArrayList<String>) {
+    constructor(name : String, prepTime : Int, totalTime : Int, ingredient : ArrayList<Ingredient>, instructions : String) {
         setName(name)
         setPrepTime(prepTime)
         setTotalTime(totalTime)
@@ -79,23 +81,23 @@ class Recipe {
         return this
     }
 
-    fun addInstruction(newInstruction : String) : Recipe {
+    fun setInstruction(newInstruction : String) : Recipe {
         if(newInstruction.isNullOrBlank()) {
             Log.w("MainActivity", "Invalid instruction")
         } else {
-            instructions.add(newInstruction)
+            instructions = newInstruction
         }
         return this
     }
 
-    fun addInstructions(newInstructions: ArrayList<String>) : Recipe {
-        for(instruction in newInstructions) {
-            if(!instruction.isNullOrBlank()) {
-                instructions.add(instruction)
-            }
-        }
-        return this
-    }
+//    fun addInstructions(newInstructions: ArrayList<String>) : Recipe {
+//        for(instruction in newInstructions) {
+//            if(!instruction.isNullOrBlank()) {
+//                instructions.add(instruction)
+//            }
+//        }
+//        return this
+//    }
 
     fun makeGF() {
         glutenFree = true
@@ -141,7 +143,35 @@ class Recipe {
         return ingredients
     }
 
-    fun getInstructions() : ArrayList<String> {
+    fun getInstructions() : String {
         return instructions
     }
+
+    fun toJSON(): JSONObject {
+        val json = JSONObject()
+
+        json.put("recipeID", recipeID)
+        json.put("name", name)
+        json.put("prepTime", prepTime)
+        json.put("totalTime", totalTime)
+        json.put("glutenFree", glutenFree)
+        json.put("vegan", vegan)
+        json.put("vegetarian", vegetarian)
+        json.put("nutFree", nutFree)
+        json.put("dairyFree", dairyFree)
+
+        // Convert ingredients to JSON
+        val ingredientsArray = JSONArray()
+        for (ingredient in ingredients) {
+            ingredientsArray.put(ingredient.toJSON())
+        }
+        json.put("ingredients", ingredientsArray)
+
+        // Convert instructions to JSON
+
+        json.put("instructions", instructions)
+
+        return json
+    }
+
 }

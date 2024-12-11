@@ -1,5 +1,8 @@
 package com.example.recipeapp
 
+import org.json.JSONArray
+import org.json.JSONObject
+
 class Ingredient {
     private var name : String = ""
     private var amt : Float = 0.0f
@@ -39,5 +42,13 @@ class Ingredient {
 
     fun getUnit() : String {
         return unit
+    }
+
+    fun toJSON(): JSONObject {
+        val json = JSONObject()
+        json.put("name", name)
+        json.put("amt", amt)
+        json.put("unit", unit)
+        return json
     }
 }

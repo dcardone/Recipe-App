@@ -16,6 +16,11 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class MainActivity : AppCompatActivity() {
     private lateinit var adView : AdView
@@ -150,12 +155,12 @@ class MainActivity : AppCompatActivity() {
     fun submitRecipe() {
         var prepTime : String = prepTimeET.text.toString()
         var totalTime : String = totalTimeET.text.toString()
-        currRecipe.addInstruction("Cook it")
+        currRecipe.setInstruction(instructionsET.text.toString())
 
         if (currRecipe.getIngredients().size <= 0) {
             var toast : Toast = Toast.makeText( this, "A recipe must have at least one ingredient", Toast.LENGTH_SHORT )
             toast.show()
-        } else if (currRecipe.getInstructions().size <= 0) {
+        } else if (currRecipe.getInstructions().isNullOrBlank()) {
             var toast: Toast = Toast.makeText(
                 this,
                 "A recipe must have at least one instruction",
@@ -186,6 +191,9 @@ class MainActivity : AppCompatActivity() {
             currRecipe.setPrepTime(prepTimeVal)
             currRecipe.setTotalTime(totalTimeVal)
 
+            currRecipe.setName(dishNameET.text.toString())
+
+
             /**         ADD RECIPE TO FAVORITES                  **
              **         PUSH RECIPE TO FIREBASE                  **
              ** UPDATE SHARED PREFERENCES (user created recipes) **/
@@ -198,7 +206,12 @@ class MainActivity : AppCompatActivity() {
             val recipeId = recipesRef.push().key // Generate unique key
             if (recipeId != null) {
                 currRecipe.setID(recipeId)
-                recipesRef.child(recipeId).setValue(currRecipe)
+                Log.w("MainActivity", currRecipe.toJSON().toString())
+                recipesRef.child(recipeId).setValue(currRecipe.toJSON().toString()).addOnSuccessListener {
+                    Log.d("Firebase", "Data upload successful!")
+                }.addOnFailureListener {
+                        Log.e("Firebase", "Data upload failed",)
+                    }
             }
 
             dishNameET.setText("")
