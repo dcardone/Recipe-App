@@ -8,8 +8,10 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.RatingBar
-import android.widget.Toast
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.AdSize
@@ -18,7 +20,6 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.DatabaseReference
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -216,7 +217,7 @@ class MainActivity : AppCompatActivity() {
                 recipesRef.child(recipeId).setValue(currRecipe.toJSON().toString()).addOnSuccessListener {
                     Log.d("Firebase", "Data upload successful!")
                 }.addOnFailureListener {
-                        Log.e("Firebase", "Data upload failed",)
+                        Log.e("Firebase", "Data upload failed")
                     }
             }
 
@@ -427,6 +428,7 @@ class MainActivity : AppCompatActivity() {
         val backButton = findViewById<Button>(R.id.btnBack)
         val emailButton = findViewById<Button>(R.id.btnEmailRecipe)
         val ratingBar = findViewById<RatingBar>(R.id.ratingBar)
+        val seekBar = findViewById<SeekBar>(R.id.seekBar)
         val nameTextView = findViewById<TextView>(R.id.tvDishNameDisplay)
         val ingredientsTextView = findViewById<TextView>(R.id.tvIngredientsDisplay)
         val instructionsTextView = findViewById<TextView>(R.id.tvInstructionsDisplay)
@@ -461,6 +463,9 @@ class MainActivity : AppCompatActivity() {
         val existingRating = sharedPreferences.getFloat("rating_${recipe.getName()}", 0f)
         ratingBar.rating = existingRating
 
+        val existingDifficulty = sharedPreferences.getFloat("difficulty_${recipe.getName()}", 0f)
+        seekBar.progress = existingDifficulty.toInt()
+
         // Set a listener to save the rating
         ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
             val editor = sharedPreferences.edit()
@@ -469,7 +474,25 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "You rated ${recipe.getName()} $rating stars!", Toast.LENGTH_SHORT).show()
         }
 
-        // Email functionality
+        seekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
+                val editor = sharedPreferences.edit()
+                editor.putFloat("difficulty_${recipe.getName()}", progress.toFloat())
+                editor.apply()
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar) {
+                // This is triggered when the user starts touching the SeekBar
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar) {
+                // This is triggered when the user stops touching the SeekBar
+            }
+        })
+
+
+
+            // Email functionality
         emailButton.setOnClickListener {
             emailRecipe(recipe)
         }
