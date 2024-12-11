@@ -418,11 +418,13 @@ class MainActivity : AppCompatActivity() {
         searchRecipesBtn.setOnClickListener{ searchRecipesViewChange() }
     }
 
+
     fun viewOneRecipe(recipe: Recipe) {
         setContentView(R.layout.view_one_recipe)
 
         // Find views in view_one_recipe.xml
         val backButton = findViewById<Button>(R.id.btnBack)
+        val emailButton = findViewById<Button>(R.id.btnEmailRecipe)
         val nameTextView = findViewById<TextView>(R.id.tvDishNameDisplay)
         val ingredientsTextView = findViewById<TextView>(R.id.tvIngredientsDisplay)
         val instructionsTextView = findViewById<TextView>(R.id.tvInstructionsDisplay)
@@ -452,6 +454,11 @@ class MainActivity : AppCompatActivity() {
 
         dietaryPreferencesTextView.text = "Dietary Preferences:\n${preferences.joinToString(", ")}"
 
+        // Email functionality
+        emailButton.setOnClickListener {
+            emailRecipe(recipe)
+        }
+
         // Set back button click listener
         backButton.setOnClickListener {
             when (lastActiveView) {
@@ -462,6 +469,40 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun emailRecipe(recipe: Recipe) {
+        // Format the recipe details
+        val recipeDetails = buildString {
+            append("Dish Name: ${recipe.getName()}\n")
+            append("Preparation Time: ${recipe.getPrepTime()} mins\n")
+            append("Total Time: ${recipe.getTotalTime()} mins\n")
+            append("Ingredients:\n")
+            recipe.getIngredients().forEachIndexed { index, ingredient ->
+                append("${index + 1}. ${ingredient.getName()} (${ingredient.getAmt()} ${ingredient.getUnit()})\n")
+            }
+            append("Instructions: ${recipe.getInstructions()}\n")
+
+            val preferences = mutableListOf<String>()
+            if (recipe.getDF()) preferences.add("Dairy-Free")
+            if (recipe.getNF()) preferences.add("Nut-Free")
+            if (recipe.getVegan()) preferences.add("Vegan")
+            if (recipe.getVegetarian()) preferences.add("Vegetarian")
+            if (recipe.getGF()) preferences.add("Gluten-Free")
+
+            if (preferences.isNotEmpty()) {
+                append("Dietary Preferences: ${preferences.joinToString(", ")}\n")
+            }
+        }
+
+        // Create email intent
+        val emailIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Recipe: ${recipe.getName()}")
+            putExtra(Intent.EXTRA_TEXT, recipeDetails)
+        }
+
+        // Launch email chooser
+        startActivity(Intent.createChooser(emailIntent, "Send Recipe via Email"))
+    }
 
     private fun loadRecipesFromSharedPreferences(): ArrayList<Recipe> {
         val sharedPreferences = getSharedPreferences("recipes", MODE_PRIVATE)
