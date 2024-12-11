@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.RatingBar
 import android.widget.Toast
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -425,6 +426,7 @@ class MainActivity : AppCompatActivity() {
         // Find views in view_one_recipe.xml
         val backButton = findViewById<Button>(R.id.btnBack)
         val emailButton = findViewById<Button>(R.id.btnEmailRecipe)
+        val ratingBar = findViewById<RatingBar>(R.id.ratingBar)
         val nameTextView = findViewById<TextView>(R.id.tvDishNameDisplay)
         val ingredientsTextView = findViewById<TextView>(R.id.tvIngredientsDisplay)
         val instructionsTextView = findViewById<TextView>(R.id.tvInstructionsDisplay)
@@ -453,6 +455,19 @@ class MainActivity : AppCompatActivity() {
         if (recipe.getGF()) preferences.add("Gluten-Free")
 
         dietaryPreferencesTextView.text = "Dietary Preferences:\n${preferences.joinToString(", ")}"
+
+        // Load existing rating if any
+        val sharedPreferences = getSharedPreferences("recipes", MODE_PRIVATE)
+        val existingRating = sharedPreferences.getFloat("rating_${recipe.getName()}", 0f)
+        ratingBar.rating = existingRating
+
+        // Set a listener to save the rating
+        ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
+            val editor = sharedPreferences.edit()
+            editor.putFloat("rating_${recipe.getName()}", rating)
+            editor.apply()
+            Toast.makeText(this, "You rated ${recipe.getName()} $rating stars!", Toast.LENGTH_SHORT).show()
+        }
 
         // Email functionality
         emailButton.setOnClickListener {
